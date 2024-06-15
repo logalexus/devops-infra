@@ -1,0 +1,48 @@
+- name: Update apt cache
+  apt: update_cache=yes
+
+- name: Install necessary packages
+  apt:
+    name:
+      - iptables
+      - isc-dhcp-server
+      - bind9
+    state: present
+
+- name: Configure iptables
+  shell: |
+    iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+    iptables -A FORWARD -i eth0 -o eth1 -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+- name: Configure DHCP
+  template:
+    src: dhcpd.conf.j2
+    dest: /etc/dhcp/dhcpd.conf
+  notify:
+    - Restart DHCP
+
+- name: Configure DNS
+  template:
+    src: named.conf.local.j2
+    dest: /etc/bind/named.conf.local
+  notify:
+    - Restart BIND
+
+- name: Add DNS zone file
+  template:
+    src: db.example.com.j2
+    dest: /etc/bind/db.example.com
+  notify:
+    - Restart BIND
+
+handlers:
+  - name: Restart DHCP
+    service:
+      name: isc-dhcp-server
+      state: restarted
+
+  - name: Restart BIND
+    service:
+      name: bind9
+      state: restarted
