@@ -1,38 +1,27 @@
 ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
 
 Vagrant.configure("2") do |config|
-  config.vm.define "gateway" do |gateway|
-    gateway.vm.box = "ubuntu/bionic64"
-    gateway.vm.network "public_network"
-    gateway.vm.network "private_network", ip: "192.168.100.1"
-    gateway.vm.provision "ansible" do |ansible|
+  config.vm.define "gate" do |gate|
+    gate.vm.hostname = "gate"
+    gate.vm.box = "ubuntu/focal64"
+    gate.vm.network "public_network", bridge: "enp0s3"
+    gate.vm.network "private_network", ip: "192.168.100.1", virtualbox__intnet: "inet"
+    gate.vm.provision "ansible" do |ansible|
       ansible.playbook = "ansible/gateway.yml"
-      ansible.groups = {
-        "gateway" => ["gateway"]
-      }
     end
   end
 
   config.vm.define "web" do |web|
-    web.vm.box = "ubuntu/bionic64"
-    web.vm.network "private_network", ip: "192.168.50.2"
-    web.vm.provision "ansible" do |ansible|
-      ansible.playbook = "ansible/web.yml"
-      ansible.groups = {
-        "web" => ["web"]
-      }
-    end
+    web.vm.hostname = "web"
+    web.vm.box = "ubuntu/focal64"
+    web.vm.network "private_network", ip: "192.168.50.2", virtualbox__intnet: "inet"
   end
 
   (1..2).each do |i|
     config.vm.define "workstation#{i}" do |ws|
-      ws.vm.box = "ubuntu/bionic64"
-      ws.vm.network "private_network", type: "dhcp"
+      ws.vm.hostname = "workstation#{i}"
+      ws.vm.box = "ubuntu/focal64"
+      ws.vm.network "private_network", type: "dhcp", virtualbox__intnet: "inet"
     end
-  end
-
-
-  config.vm.provider "virtualbox" do |vb|
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
   end
 end

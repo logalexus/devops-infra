@@ -1,0 +1,9 @@
+- name: Restart DHCP
+  service:
+    name: isc-dhcp-server
+    state: restarted
+
+- name: Restart BIND
+  service:
+    name: bind9
+    state: restarted
