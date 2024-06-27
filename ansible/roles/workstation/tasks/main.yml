@@ -1,10 +1,4 @@
 - name: Update apt cache
   apt: update_cache=yes
 
-# - name: Configure resolv.conf
-#   lineinfile:
-#     path: /etc/resolv.conf
-#     line: "{{ item }}"
-#   with_items:
-#     - "search example.com"
-#     - "nameserver 192.168.100.1"
+

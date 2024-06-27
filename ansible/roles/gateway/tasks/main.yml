@@ -1,12 +1,10 @@
-- name: Update apt cache
-  apt: update_cache=yes
-
 - name: Install necessary packages
   apt:
     name:
       - iptables
       - isc-dhcp-server
       - bind9
+    update_cache: yes
     state: present
 
 - name: Configure iptables

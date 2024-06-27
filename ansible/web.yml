@@ -1,4 +1,7 @@
 - hosts: web
   become: yes
   roles:
-    - web
+    # - web
+    - default-gateway
+    - resolve
+
