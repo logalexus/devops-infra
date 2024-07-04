@@ -1,7 +1,7 @@
 ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
 
 BOX_NAME = 'ubuntu/jammy64'
-ANSIBLE_PLAYBOOK_PATH = 'ansible/'
+ANSIBLE_PLAYBOOK_PATH = 'ansible/vagrant/'
 PRIVATE_NETWORK = 'inet'
 
 GATEWAY_HOSTNAME = 'gate'
@@ -11,9 +11,11 @@ GATEWAY_IP = '192.168.100.1'
 WEB_HOSTNAME = 'web'
 WEB_IP = '192.168.100.2'
 
-WORKSTATION_HOSTNAME_PREFIX = 'workstation'
-WORKSTATION_COUNT = 0
+ADMIN_HOSTNAME = 'admin'
+ADMIN_IP = '192.168.100.5'
 
+PROD_HOSTNAME_PREFIX = 'prod'
+prod_ips = ['192.168.100.3']
 
 Vagrant.configure("2") do |config|
   config.vm.define GATEWAY_HOSTNAME do |gate|
@@ -34,11 +36,24 @@ Vagrant.configure("2") do |config|
     end
   end
 
-  (1..WORKSTATION_COUNT).each do |i|
-    config.vm.define "#{WORKSTATION_HOSTNAME_PREFIX}#{i}" do |ws|
-      ws.vm.hostname = "#{WORKSTATION_HOSTNAME_PREFIX}#{i}"
-      ws.vm.box = BOX_NAME
-      ws.vm.network "private_network", type: "dhcp", virtualbox__intnet: PRIVATE_NETWORK
+  prod_ips.each_with_index do |ip, i|
+    config.vm.define "#{PROD_HOSTNAME_PREFIX}#{i + 1}" do |prod|
+      prod.vm.hostname = "#{PROD_HOSTNAME_PREFIX}#{i + 1}"
+      prod.vm.box = BOX_NAME
+      prod.vm.network "private_network", ip: ip, virtualbox__intnet: PRIVATE_NETWORK
+      prod.vm.provision "ansible" do |ansible|
+        ansible.playbook = "#{ANSIBLE_PLAYBOOK_PATH}prod.yml"
+      end
     end
   end
+
+  config.vm.define ADMIN_HOSTNAME do |admin|
+    admin.vm.hostname = ADMIN_HOSTNAME
+    admin.vm.box = BOX_NAME
+    admin.vm.network "private_network", ip: ADMIN_IP, virtualbox__intnet: PRIVATE_NETWORK
+    admin.vm.provision "ansible" do |ansible|
+      ansible.playbook = "#{ANSIBLE_PLAYBOOK_PATH}admin.yml"
+    end
+  end
+
 end

@@ -3,3 +3,5 @@
   roles:
     - gateway
     - resolve
+    - admin-user
+    - ssh

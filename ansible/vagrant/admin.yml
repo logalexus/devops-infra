@@ -1,7 +1,8 @@
-- hosts: web
+- hosts: admin
   become: yes
   roles:
-    # - web
     - default-gateway
     - resolve
+    - admin-user
+    - ssh
 

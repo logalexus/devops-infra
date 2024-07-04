@@ -1,0 +1,6 @@
+- name: Set ssh PasswordAuthentication to yes
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: '^#?PasswordAuthentication'
+    line: 'PasswordAuthentication yes'
+  notify: restart ssh

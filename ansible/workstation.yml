@@ -1,4 +1,0 @@
-- hosts: workstations
-  become: yes
-  roles:
-    - workstation

@@ -1,0 +1,7 @@
+- name: Check if gateway exists
+  command: ip route show default
+  register: route_check
+
+- name: Add gateway if it does not exist
+  command: ip route add default via 192.168.100.1
+  when: "'192.168.100.1' not in route_check.stdout"

@@ -1,0 +1,7 @@
+- name: Create admin user 'admin'
+  user:
+    name: admin
+    password: "{{ 'qwe' | password_hash('sha512') }}"
+    shell: /bin/bash
+    create_home: yes
+    groups: sudo, admin

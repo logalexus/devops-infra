@@ -1,0 +1,6 @@
+- name: restart ssh
+  service:
+    name: ssh
+    state: restarted
+  async: 1
+  poll: 0
