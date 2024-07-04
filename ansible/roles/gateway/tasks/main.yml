@@ -7,11 +7,30 @@
     update_cache: yes
     state: present
 
-- name: Configure iptables
-  shell: |
-    iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-    iptables -A FORWARD -i enp3s0 -o enp3s1 -j ACCEPT
-    iptables -A FORWARD -i enp3s1 -o enp3s0 -m state --state ESTABLISHED,RELATED -j ACCEPT
+- name: Ensure IP forwarding is enabled in sysctl.conf
+  lineinfile:
+    path: /etc/sysctl.conf
+    regexp: "^net.ipv4.ip_forward"
+    line: "net.ipv4.ip_forward = 1"
+    state: present
+
+- name: Apply sysctl settings from sysctl.conf
+  command: sysctl -p
+
+- name: Add POSTROUTING rule to iptables
+  iptables:
+    table: nat
+    chain: POSTROUTING
+    jump: MASQUERADE
+    out_interface: enp0s3
+  notify:
+    - Save iptables
+
+- name: Ensure iptables rules directory exists
+  file:
+    path: /etc/iptables
+    state: directory
+    mode: "0755"
 
 - name: Configure DHCP
   template:
@@ -33,4 +52,3 @@
     dest: /etc/bind/db.devops.com
   notify:
     - Restart BIND
-

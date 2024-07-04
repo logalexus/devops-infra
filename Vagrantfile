@@ -1,6 +1,6 @@
 ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
 
-BOX_NAME = 'ubuntu/focal64'
+BOX_NAME = 'ubuntu/jammy64'
 ANSIBLE_PLAYBOOK_PATH = 'ansible/'
 PRIVATE_NETWORK = 'inet'
 
@@ -12,14 +12,13 @@ WEB_HOSTNAME = 'web'
 WEB_IP = '192.168.100.2'
 
 WORKSTATION_HOSTNAME_PREFIX = 'workstation'
-WORKSTATION_COUNT = 2
+WORKSTATION_COUNT = 0
 
 
 Vagrant.configure("2") do |config|
   config.vm.define GATEWAY_HOSTNAME do |gate|
     gate.vm.hostname = GATEWAY_HOSTNAME
     gate.vm.box = BOX_NAME
-    gate.vm.network "public_network", bridge: GATEWAY_PUBLIC_BRIDGE
     gate.vm.network "private_network", ip: GATEWAY_IP, virtualbox__intnet: PRIVATE_NETWORK
     gate.vm.provision "ansible" do |ansible|
       ansible.playbook = "#{ANSIBLE_PLAYBOOK_PATH}gateway.yml"

@@ -7,3 +7,6 @@
   service:
     name: bind9
     state: restarted
+
+- name: Save iptables
+  shell: iptables-save > /etc/iptables/rules.v4
