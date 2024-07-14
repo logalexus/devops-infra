@@ -1,6 +1,7 @@
 - hosts: prod*
   become: yes
   roles:
-    - prod
+    - default-gateway
+    - resolve
     - admin-user
     - ssh
