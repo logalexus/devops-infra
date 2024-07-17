@@ -1,9 +1,8 @@
-- hosts: admin
+- hosts: kafka
   become: yes
   roles:
-    - default-gateway
+    - gateway
     - resolve
     - admin-user
     - ssh
-    - ansible
-
+    

@@ -21,8 +21,11 @@ Vagrant.configure("2") do |config|
   create_vm(config, '192.168.100.1', 'gate', 'gateway.yml', BOX_NAME, PRIVATE_NETWORK, BRIDGE)
   create_vm(config, '192.168.100.2', 'web', 'web.yml', BOX_NAME, PRIVATE_NETWORK, BRIDGE)
   create_vm(config, '192.168.100.5', 'admin', 'admin.yml', BOX_NAME, PRIVATE_NETWORK, BRIDGE)
+  create_vm(config, '192.168.100.6', 'db', 'db.yml', BOX_NAME, PRIVATE_NETWORK, BRIDGE)
+  create_vm(config, '192.168.100.7', 'kafka', 'kafka.yml', BOX_NAME, PRIVATE_NETWORK, BRIDGE)
+  create_vm(config, '192.168.100.8', 'zabbix', 'zabbix.yml', BOX_NAME, PRIVATE_NETWORK, BRIDGE)
 
-  prod_ips = ['192.168.100.3']
+  prod_ips = ['192.168.100.3', '192.168.100.4']
   prod_ips.each_with_index do |ip, i|
     create_vm(config, ip, "prod#{i + 1}", 'prod.yml', BOX_NAME, PRIVATE_NETWORK, BRIDGE)
   end

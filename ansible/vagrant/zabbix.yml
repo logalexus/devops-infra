@@ -1,9 +1,7 @@
-- hosts: admin
+- hosts: zabbix
   become: yes
   roles:
     - default-gateway
     - resolve
     - admin-user
     - ssh
-    - ansible
-

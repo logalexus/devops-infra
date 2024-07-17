@@ -1,0 +1,12 @@
+- hosts: db
+  become: yes
+  roles:
+    - geerlingguy.postgresql
+
+  vars:
+    postgresql_databases:
+    - name: chat 
+      # login_host: 0.0.0.0
+      login_password: pass
+      login_user: user
+      port: 5432

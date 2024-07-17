@@ -1,0 +1,7 @@
+collections:
+  - name: community.zabbix
+roles:
+  - name: geerlingguy.postgresql
+  - name: geerlingguy.mysql 
+  - name: geerlingguy.docker
+  
